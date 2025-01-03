@@ -19,6 +19,8 @@ class MenuActionButton extends StatefulWidget {
   const MenuActionButton({
     super.key,
     required this.onTap,
+    required this.onHoverEnter,
+    required this.onHoverExit,
     required this.pressedColor,
     required this.hoverColor,
     required this.child,
@@ -26,6 +28,12 @@ class MenuActionButton extends StatefulWidget {
 
   /// Called when the menu item is tapped.
   final GestureTapCallback? onTap;
+
+  /// Called when the menu item is hovered.
+  final GestureTapCallback? onHoverEnter;
+
+  /// Called when the menu item is no longer hovered.
+  final GestureTapCallback? onHoverExit;
 
   /// Color of container during press event.
   final Color pressedColor;
@@ -69,6 +77,7 @@ class _MenuActionButtonState extends State<MenuActionButton> {
 
       if (isWithinMenuItem && !isPressed) {
         HapticFeedback.selectionClick();
+        onHoverEnter();
       }
 
       setState(() => isPressed = isWithinMenuItem);
@@ -77,6 +86,13 @@ class _MenuActionButtonState extends State<MenuActionButton> {
     if (state is SwipeCompleteState && isPressed) {
       onTap();
     }
+  }
+
+  void onHoverEnter() {
+    if (!enabled) return;
+    if (isHovered) return;
+
+    widget.onHoverEnter?.call();
   }
 
   void onTap() {
@@ -97,7 +113,10 @@ class _MenuActionButtonState extends State<MenuActionButton> {
   }
 
   void onExit(PointerExitEvent _) {
-    if (enabled && isHovered) setState(() => isHovered = false);
+    if (enabled && isHovered) {
+      setState(() => isHovered = false);
+      widget.onHoverExit?.call();
+    }
   }
 
   void onTapDown(TapDownDetails _) {

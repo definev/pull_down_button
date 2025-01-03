@@ -50,6 +50,8 @@ class PullDownMenuHeader extends StatelessWidget implements PullDownMenuEntry {
     super.key,
     this.onTap,
     this.tapHandler = PullDownMenuItem.defaultTapHandler,
+    this.onHoverEnter,
+    this.onHoverExit,
     this.leading,
     this.leadingBuilder,
     required this.title,
@@ -85,6 +87,12 @@ class PullDownMenuHeader extends StatelessWidget implements PullDownMenuEntry {
   /// Handler that provides this item's [BuildContext] as well as [onTap] to
   /// resolve how [onTap] callback is used.
   final PullDownMenuItemTapHandler tapHandler;
+
+  /// Callback that is called when the pointer enters the widget.
+  final VoidCallback? onHoverEnter;
+
+  /// Callback that is called when the pointer exits the widget.
+  final VoidCallback? onHoverExit;
 
   /// The leading widget of [PullDownMenuHeader].
   ///
@@ -141,6 +149,8 @@ class PullDownMenuHeader extends StatelessWidget implements PullDownMenuEntry {
         button: onTap != null,
         child: MenuActionButton(
           onTap: onTap != null ? () => tapHandler(context, onTap) : null,
+          onHoverEnter: onHoverEnter,
+          onHoverExit: onHoverExit,
           hoverColor: theme.onHoverBackgroundColor!,
           pressedColor: theme.onPressedBackgroundColor!,
           child: _HeaderBody(
